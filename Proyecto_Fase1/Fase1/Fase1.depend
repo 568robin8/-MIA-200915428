@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1470470079 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<sys/types.h>
+
