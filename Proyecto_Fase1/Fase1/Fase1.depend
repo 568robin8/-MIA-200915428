@@ -1,7 +1,14 @@
 # depslib dependency file v1.0
-1470548495 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/main.c
+1470629825 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<sys/types.h>
+	"cola_comando.h"
+
+1470587997 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.c
+
+1470587815 /home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.h
+	<stdio.h>
+	<stdlib.h>
 

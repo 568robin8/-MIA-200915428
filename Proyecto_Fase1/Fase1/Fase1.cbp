@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="cola_comando.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cola_comando.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

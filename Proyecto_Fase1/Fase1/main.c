@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "cola_comando.h"
+
 typedef struct{
     char status[10];
     char part_type[2];
@@ -25,7 +27,7 @@ typedef struct{
 }mbr;
 
 void inicio();
-void createdisk(char *instruction);
+void createdisk(Cola *instruccion);
 
 int main()
 {
@@ -54,11 +56,37 @@ void inicio(){
 
    // printf("%s /n",line_instruction);
    // printf("%s /n",copy_instruction);
+    Cola *nueva;
+    nueva = malloc(sizeof(Cola));
+    CrearLista(nueva);
 
     char *first_word =strtok(line_instruction," ");
 
-    if(strcmp(first_word,"mkdisk")==0){
-        createdisk(copy_instruction);
+    while ( first_word != NULL ) {
+
+        insertar_cola(nueva,first_word);
+        first_word=strtok(NULL," ");
+    }
+
+/*
+while (!Vacia(nueva)){
+char *temp = consultar_cola(nueva);
+printf("%s\n",temp);
+if(strcmp(temp,"si")==0){
+printf("hay un si\n");
+}
+eliminarnodo_cola(nueva);
+}
+*/
+
+   if(strcmp(consultar_cola(nueva),"mkdisk")==0){
+
+        eliminarnodo_cola(nueva);
+      //printf("ahi vamos");
+        createdisk(nueva);
+
+        system("mkdir -p  carro/mama");
+
     }
 
 
@@ -76,7 +104,7 @@ void inicio(){
 
 }
 
-void createdisk(char* instruction){
+void createdisk(Cola * instrucciones){
     char name[16];
     char unit[2];
     char path[200];
@@ -85,63 +113,47 @@ void createdisk(char* instruction){
 
 
 
+    while (!Vacia(instrucciones)){
 
-    char *token = strtok(instruction," ");
-/*
-    while ( token != NULL ) {
-      printf( "%s\n", token );
+    char* token = consultar_cola(instrucciones);
+    //printf("%s",token);
 
-        //token=strtok(NULL,":");
-        token=strtok(NULL,"::");
-    }
-    */
-    //printf("%s\n",token);
-    //token = strtok(NULL, " ");
-    printf("%s\n",token);
-    token = strtok(NULL, "::" );
+    token =strtok(token,"::");
 
-    printf("%s\n",token);
-    token = strtok( NULL, " " );
-    printf("%s\n",token);
-
-     token = strtok(NULL, "::" );
-
-    printf("%s\n",token);
-    token = strtok( NULL, " " );
-    printf("%s\n",token);
-
-
-/*
-     while ( token != NULL ) {
-     // printf( "%s\n", token );
      if(strcmp(token,"-size")==0){
-        //token=strtok(NULL,":");
-        token=strtok(token," ");
+
+        token=strtok(NULL,"::");
+
             size = atoi(token);
-            printf("%s\n",token);
-           //printf( "%d\n",size );
 
      }else if(strcmp(token,"-path")==0){
 
-            //token=strtok(NULL,":");
-            strcpy(path,token);
-     }else if(strcmp(token,"-unit")==0){
+            token=strtok(NULL,"::");
+            token=strtok(token,"\"");
 
-            token=strtok(NULL,":");
+            strcpy(path,token);
+
+     }else if(strcmp(token,"+unit")==0){
+
+            token=strtok(NULL,"::");
+            token=strtok(token,"\"");
             strcpy(unit,token);
      }else if(strcmp(token,"-name")==0){
 
-            token=strtok(NULL,":");
+            token=strtok(NULL,"::");
+            token=strtok(token,"\"");
             strcpy(name,token);
      }
-      token = strtok( NULL, " " );
-    //  token = strtok( NULL, "::" );
-   }
+
+    eliminarnodo_cola(instrucciones);
+    }
 
      printf( "%d\n",size );
       printf( "%s\n",path );
        printf( "%s\n",unit );
         printf( "%s\n",name );
-*/
+
 
 }
+
+
