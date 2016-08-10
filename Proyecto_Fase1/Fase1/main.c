@@ -4,8 +4,13 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include "cola_comando.h"
+
+int size = 0;
+int correlativo = 0;
+char unit[2] = "\0";
 
 typedef struct{
     char status[10];
@@ -26,6 +31,15 @@ typedef struct{
     particion mbr_partition4;
 
 }mbr;
+
+typedef struct{
+    char part_status[20];
+    char part_fit[4];
+    int part_start;
+    int part_size;
+    int part_next;
+    char part_name[16];
+}ebr;
 
 void inicio();
 void mkdisk(Cola *instruccion);
@@ -74,11 +88,31 @@ void inicio(){
    if(strcmp(consultar_cola(nueva),"mkdisk")==0){
 
         eliminarnodo_cola(nueva);
-      //printf("ahi vamos");
-        mkdisk(nueva);
-
-
-
+          mkdisk(nueva);
+    }else if(strcmp(consultar_cola(nueva),"fkdisk")==0){
+        eliminarnodo_cola(nueva);
+        // crear particiones
+    }else if(strcmp(consultar_cola(nueva),"mount")==0){
+        eliminarnodo_cola(nueva);
+        //montar particion
+    }else if(strcmp(consultar_cola(nueva),"rmdisk")==0){
+        eliminarnodo_cola(nueva);
+        //eliminar disco
+    }else if(strcmp(consultar_cola(nueva),"umount")==0){
+        eliminarnodo_cola(nueva);
+        //desmontar particion
+    }else if(strcmp(consultar_cola(nueva),"mbr")==0){
+        eliminarnodo_cola(nueva);
+        //mostrar reporte mbr
+    }else if(strcmp(consultar_cola(nueva),"disk")==0){
+        eliminarnodo_cola(nueva);
+        //mostrar reporete disk
+    }else if(strcmp(consultar_cola(nueva),"exec")==0){
+        eliminarnodo_cola(nueva);
+        //leer script
+    }else if(strcmp(consultar_cola(nueva),"exit")==0){
+        eliminarnodo_cola(nueva);
+        exit(0);
     }
 
 
@@ -88,13 +122,11 @@ void inicio(){
 
 }
 
-void createdisk(Cola * instrucciones){
+void mkdisk(Cola * instrucciones){
     char name[16] ="\0";
     char nameaux[16] ="\0";
-    char unit[2] = "\0";
     char path[200] = "\0";
-    int size;
-    size = 0;
+
 
     int name_ = 0;
     int unit_ = 0;
@@ -159,7 +191,7 @@ void createdisk(Cola * instrucciones){
             char *extension = nameaux;
             extension = strtok(extension,".");
             extension = strtok(NULL,".");
-            if(strcmp(extension,"sdk")==0){
+            if(strcmp(extension,"dsk")==0){
                 strcpy(name,token);
                 name_ = 1;
             }else{
@@ -179,10 +211,10 @@ void createdisk(Cola * instrucciones){
     }
 
     if(name_ == 1 && path_ == 1 && size_ == 1 && unit_ == 1) {
-     printf( "%d\n",size );
-      printf( "%s\n",path );
-       printf( "%s\n",unit );
-        printf( "%s\n",name );
+    // printf( "%d\n",size );
+    //  printf( "%s\n",path );
+    //   printf( "%s\n",unit );
+    //    printf( "%s\n",name );
 
 
 
@@ -199,18 +231,22 @@ void createdisk(Cola * instrucciones){
 
     if(stat(direccionTMP, &st)==-1){ //verificar si el directorio existe
                 printf("disponible");
-
-
+                printf("unidad es %s\n",unit);
                 if(strcmp(unit,"k")==0){
+
                 // calcular size actualizar mbr y enviarlo como parametro..
+               //  printf("%d\n",size);
+                size = size * 1000;
+                creardisco(direccionTMP,size);
                 }else{
+                //printf("%d\n",size);
 
-
-
+                size = size*1000000;
+                creardisco(direccionTMP,size    );
                 }
 
             }else{
-            printf("Error en la creacion: \nYa existe el disco %s ",direccionTMP1);
+            printf("Error en la creacion: \nYa existe el disco %s ",direccionTMP);
             }
 
 }
@@ -221,16 +257,40 @@ void createdisk(Cola * instrucciones){
 
 void creardisco(char* direccion, int size){
 
+ mbr nuevo;
+ struct tm fecha=*localtime(&(time_t){time(NULL)});
+ strcpy(nuevo.mbr_fecha_creacion,asctime(&fecha));
+ printf(nuevo.mbr_fecha_creacion);
+ //nuevo.mbr_disk_asignature = 1;
+ nuevo.mbr_disk_asignature = correlativo;
+ nuevo.mbr_tamanio = size;
+ //nuevo.mbr_partition1 = NULL;
+ //nuevo.mbr_partition2 = NULL;
+ //nuevo.mbr_partition3 = NULL;
+ //nuevo.mbr_partition4 = NULL;
+
 
    FILE* f = fopen(direccion,"wb");
    if(f==NULL){
     printf("error");
    }else{
 
-   fseek( f, size, SEEK_SET );
+   fseek( f, (size-2), SEEK_SET );
    fputs("/0", f);
    fclose(f);
    }
+
+
+   f = fopen(direccion,"r+b");
+   if(f==NULL){
+   printf("error al escribir");
+
+    }else{
+    rewind(f);
+    fwrite(&nuevo,sizeof(mbr),1,f);
+
+    }
+    fclose(f);
 }
 
 
