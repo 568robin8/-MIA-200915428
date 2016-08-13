@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1470912779 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/main.c
+1471065474 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -9,9 +9,9 @@
 	"cola_comando.h"
 	<sys/stat.h>
 
-1470846790 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.c
+1471050275 source:/home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.c
 
-1470587815 /home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.h
+1471050275 /home/rob/[MIA]200915428/-MIA-200915428/Proyecto_Fase1/Fase1/cola_comando.h
 	<stdio.h>
 	<stdlib.h>
 

@@ -49,6 +49,174 @@ void eliminarnodo_cola(Cola *c){
     }
 }
 
+void inicializar_lista_mount(lista_mount* lista){
+    lista->inicio = NULL;
+    lista->fin = NULL;
+    lista->tamanio = 0;
+}
+
+void insertar_lista(lista_mount *lista, char* path, char *name, char*id){
+    node_mount *nuevo;
+    nuevo = malloc(sizeof(node_mount));
+    nuevo->sig = NULL;
+    nuevo->ant = NULL;
+    strcpy(nuevo->id_mount,"");
+    strcat(nuevo->id_mount,id);
+    strcpy(nuevo->name_mount,name);
+    strcpy(nuevo->path_mount,path);
+
+    node_mount *temp;
+    temp = lista->inicio;
+    if(temp == NULL){
+        lista->inicio = nuevo;
+        lista->fin = nuevo;
+        lista->tamanio++;
+    }else {
+        while(temp->sig != NULL){
+            temp= temp->sig;
+        }
+
+        temp->sig = nuevo;
+        nuevo->ant = temp;
+        lista->fin = nuevo;
+        lista->tamanio++;
+    }
+}
+
+void print_mounts(lista_mount *lista){
+     if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp!= NULL){
+            printf("mounts : id:%s path: %s partition: %s\n",temp->id_mount, temp->path_mount, temp->name_mount);
+
+            temp= temp->sig;
+        }
+    }else{
+        printf("No hay particiones montadas\n");
+    }
+}
+
+int consultar_existe(lista_mount *lista, char* id){
+    int encontrado = 0;
+    if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp != NULL){
+              if(strcmp(temp->id_mount,id)==0){
+                encontrado = 1;
+                break;
+              }
+            temp= temp->sig;
+        }
+    }
+    return encontrado;
+}
+
+int consultar_path(lista_mount *lista, char *path){
+   int encontrado = 0;
+    if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp != NULL){
+              if(strcmp(temp->path_mount,path)==0){
+                encontrado = 1;
+                break;
+              }
+            temp= temp->sig;
+        }
+    }
+    return encontrado;
+}
+
+int consultar_letramount(lista_mount *lista, char *letra){
+      int encontrado = 0;
+    if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp != NULL){
+
+              if(temp->id_mount[2]==letra[2]){
+                encontrado = 1;
+                break;
+              }
+            temp= temp->sig;
+        }
+    }
+    return encontrado;
+}
+
+
+
+char *consultar_id(lista_mount *lista, char* id){
+    char encontrado[200];
+    if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp != NULL){
+              if(strcmp(temp->id_mount,id)==0){
+                printf("PATH ANTES DE SER ENVIADO %s\n",temp->path_mount);
+                strcpy(encontrado,temp->path_mount);
+                return temp->path_mount;
+                printf("PATH ENVIADO %s\n", encontrado);
+                break;
+              }
+            temp= temp->sig;
+        }
+    }
+    return encontrado;
+
+}
+
+void eliminar_lista(lista_mount *lista, char* id){
+
+    node_mount *eliminar;
+      if(lista->inicio!=NULL){
+           node_mount *temp;
+            temp = lista->inicio;
+
+              while(temp != NULL){
+              if(strcmp(temp->id_mount,id)==0){
+                eliminar = temp;
+                break;
+              }
+            temp= temp->sig;
+        }
+    }
+
+    if(eliminar==lista->inicio){
+        if(lista->tamanio==1){
+            eliminar->ant = NULL;
+            eliminar->sig = NULL;
+            lista->inicio =NULL;
+            lista->fin = NULL;
+            free(eliminar);
+            lista->tamanio--;
+        }else{
+            lista->inicio = eliminar->sig;
+            lista->inicio->ant = NULL;
+            free(eliminar);
+            lista->tamanio--;
+        }
+    }else if (eliminar == lista->fin){
+        lista->fin = eliminar->ant;
+        lista->fin->sig = NULL;
+        free(eliminar);
+        lista->tamanio--;
+    }else{
+        eliminar->sig->ant = eliminar->ant;
+        eliminar->ant->sig = eliminar->sig;
+        free(eliminar);
+        lista->tamanio--;
+    }
+
+
+}
 /* REPOERTE MBR BETA
 
 void Reporte_MBR(char *ruta_disco){
